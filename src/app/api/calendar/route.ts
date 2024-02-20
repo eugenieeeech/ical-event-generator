@@ -1,6 +1,9 @@
-import ical from "ical-generator";
 
-export async function GET(req: Request) {
+import ical from "ical-generator";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(req:NextRequest) {
+ 
   if (req.method !== "GET") {
     return new Response("Method Not Allowed", {
       headers: { Allow: "GET" },
@@ -9,15 +12,15 @@ export async function GET(req: Request) {
   }
 
   const filename = "calendar.ics";
-  const { searchParams } = new URL(req.url);
-  const name = searchParams.get("name");
-  try {
+  
+  try { 
+  
     const calendar = ical({
       name: "Generated",
       events: [
         {
           start: new Date("2024-01-01"),
-          summary: name ?? "", //event title
+          summary: req.nextUrl.searchParams.get("name") ?? "", //event title
         },
       ],
     });
