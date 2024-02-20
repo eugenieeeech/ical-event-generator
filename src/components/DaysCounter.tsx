@@ -46,7 +46,7 @@ export const DaysCounter = () => {
     <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-          Days Counter
+          Interval Days Counter
         </h2>
       </div>
 
@@ -104,23 +104,27 @@ export const DaysCounter = () => {
                 />
               </div>
             </div>
-            <div className="mt-4 flex gap-2 items-center">
-              <input
-                id="isStartDateCount"
-                name="isStartDateCount"
-                type="checkbox"
-                required
-                className="h-6 w-6 rounded-lg text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                checked={isStartDateCount}
-                onChange={() => setIsStartDateCount(!isStartDateCount)}
-              />
-              <label
-                htmlFor="startDay"
-                className="text-sm font-medium leading-6 text-gray-900"
-              >
-                Is Start Date Count ?
-              </label>
-            </div>
+            <div className="relative flex items-start mt-4 ">
+          <div className="flex h-6 items-center">
+            <input
+              id="isStartDateCount"
+              aria-describedby="isStartDateCount-description"
+              name="isStartDateCount"
+              type="checkbox"
+              className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+              checked={isStartDateCount}
+              onChange={() => setIsStartDateCount(!isStartDateCount)}
+            />
+          </div>
+          <div className="ml-3 text-sm leading-6">
+            <label htmlFor="comments" className="font-medium text-gray-900">
+            Count Start Date as 1st day
+            </label>
+            <p id="comments-description" className="text-gray-500">
+              Counting the begining date as 1st day
+            </p>
+          </div>
+        </div>
           </div>
           <div>
             <button
