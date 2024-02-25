@@ -1,5 +1,5 @@
 import { format, parseISO } from "date-fns";
-import ical from "ical-generator";
+import ical, { ICalCalendarMethod } from "ical-generator";
 export const dynamic = "force-static";
 
 type Payload = {
@@ -12,11 +12,12 @@ export async function POST(req: Request, res: Response) {
   const filename = "calendar.ics";
   const title = data.title;
 
-  const events = data.eventDates.map((date) => {
+  const events = data.eventDates.map((date, index) => {
     return {
       start: parseISO(date),
       allDay: true,
       summary: title,
+      description: `Event Occurence: ${index}`,
     };
   });
 
@@ -25,6 +26,7 @@ export async function POST(req: Request, res: Response) {
       name: data.title,
       events: events,
     });
+    calendar.method(ICalCalendarMethod.REQUEST);
 
     return new Response(calendar.toString(), {
       headers: {
