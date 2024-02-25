@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { IcalGenerate } from "./IcalGenerate";
 
 export function dayIntervalCounter({
   startDate,
@@ -10,18 +11,24 @@ export function dayIntervalCounter({
   interval: number;
   isStartDateCount: boolean;
 }) {
+  const resultDate = new Date();
   return isStartDateCount
-    ? new Date().setTime(
-        startDate.getTime() + (interval - 1) * 1000 * 60 * 60 * 24
+    ? new Date(
+        new Date().setTime(
+          startDate.getTime() + (interval - 1) * 1000 * 60 * 60 * 24
+        )
       )
-    : new Date().setTime(startDate.getTime() + interval * 1000 * 60 * 60 * 24);
+    : new Date(
+        new Date().setTime(startDate.getTime() + interval * 1000 * 60 * 60 * 24)
+      );
 }
 export const IcalInfoForm = () => {
   const [startingDay, setStartingDay] = useState(new Date());
-  const resultDate = new Date();
-  const [result, setResult] = useState("");
+  const [title, setTitle] = useState("");
+  const [occurences, setOccurences] = useState(1);
   const [inputDays, setInputDays] = useState(1);
   const [isStartDateCount, setIsStartDateCount] = useState(true);
+
   const handleInputDays = (e: any) => {
     const input = e.target.value;
     setInputDays(input);
@@ -30,16 +37,6 @@ export const IcalInfoForm = () => {
     const updateDate = new Date(e.target.value);
     startingDay.setTime(updateDate.getTime());
     setStartingDay(updateDate);
-  };
-  const handleCal = () => {
-    isStartDateCount
-      ? resultDate.setTime(
-          startingDay.getTime() + (inputDays - 1) * 1000 * 60 * 60 * 24
-        )
-      : resultDate.setTime(
-          startingDay.getTime() + inputDays * 1000 * 60 * 60 * 24
-        );
-    setResult(resultDate.toLocaleDateString());
   };
 
   return (
@@ -67,6 +64,8 @@ export const IcalInfoForm = () => {
                 id="eventTitle"
                 name="eventTitle"
                 type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 required
                 className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
@@ -163,17 +162,20 @@ export const IcalInfoForm = () => {
                 type="number"
                 autoComplete="number"
                 required
+                value={occurences}
+                onChange={(e) => setOccurences(Number(e.target.value))}
                 className="block w-full rounded-md border-0 px-2 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
           <div>
-            <button
-              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 stext-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              onClick={handleCal}
-            >
-              Generate
-            </button>
+            <IcalGenerate
+              title={title}
+              occurences={occurences}
+              interval={inputDays}
+              beginDate={startingDay}
+              isStartDateCount={isStartDateCount}
+            />
           </div>
         </div>
       </div>
