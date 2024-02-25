@@ -1,28 +1,29 @@
-
+import { format, parseISO } from "date-fns";
 import ical from "ical-generator";
-import { NextRequest, NextResponse } from "next/server";
+export const dynamic = "force-static";
 
-export async function GET(req:NextRequest) {
- 
-  if (req.method !== "GET") {
-    return new Response("Method Not Allowed", {
-      headers: { Allow: "GET" },
-      status: 405,
-    });
-  }
+type Payload = {
+  title: string;
+  eventDates: string[];
+};
 
+export async function POST(req: Request, res: Response) {
+  const data: Payload = JSON.parse(await req.json());
   const filename = "calendar.ics";
-  
-  try { 
-  
+  const title = data.title;
+
+  const events = data.eventDates.map((date) => {
+    return {
+      start: parseISO(date),
+      allDay: true,
+      summary: title,
+    };
+  });
+
+  try {
     const calendar = ical({
-      name: "Generated",
-      events: [
-        {
-          start: new Date("2024-01-01"),
-          summary: req.nextUrl.searchParams.get("name") ?? "", //event title
-        },
-      ],
+      name: data.title,
+      events: events,
     });
 
     return new Response(calendar.toString(), {
