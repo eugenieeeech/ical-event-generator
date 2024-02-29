@@ -1,5 +1,6 @@
 import { format, parseISO } from "date-fns";
 import ical, { ICalCalendarMethod } from "ical-generator";
+import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-static";
 
 type Payload = {
@@ -7,7 +8,7 @@ type Payload = {
   eventDates: string[];
 };
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: NextRequest, res: NextResponse) {
   const data: Payload = JSON.parse(await req.json());
   const filename = "calendar.ics";
   const title = data.title;
