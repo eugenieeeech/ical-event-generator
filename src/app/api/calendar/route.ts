@@ -8,7 +8,7 @@ type Payload = {
   eventDates: string[];
 };
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   const data: Payload = JSON.parse(await req.json());
   const filename = "calendar.ics";
   const title = data.title;

@@ -1,5 +1,6 @@
 import { formatISO, parseISO } from "date-fns";
 import { dayIntervalCounter } from "./IcalInfoForm";
+import ical, { ICalCalendarMethod } from "ical-generator";
 export const dynamic = "force-static";
 export const IcalGenerate = ({
   title,
@@ -31,16 +32,40 @@ export const IcalGenerate = ({
     });
 
     try {
-      //production
-      const res = await fetch(`/api/test`, {
-        method: "POST",
-        body: JSON.stringify(submitData),
-        headers: {
-          "content-type": "application/json",
-        },
+      // api call
+      // const test = await POST(submitData);
+      // const res = await fetch(`/api/calendar`, {
+      //   method: "POST",
+      //   body: JSON.stringify(submitData),
+      //   headers: {
+      //     "content-type": "application/json",
+      //   },
+      // });
+      // production
+      const filename = "calendar.ics";
+
+      const events = eventDates.map((date, index) => {
+        return {
+          start: parseISO(date),
+          allDay: true,
+          summary: title,
+          description: `Event Occurence: ${index}`,
+        };
       });
 
-      const blob = await res.blob();
+      const calendar = ical({
+        name: title,
+        events: events,
+      });
+      calendar.method(ICalCalendarMethod.REQUEST);
+
+      const blob = await new Response(calendar.toString(), {
+        headers: {
+          "Content-Type": "text/calendar; charset=utf-8",
+          "Content-Disposition": `attachment; filename=${filename}`,
+        },
+        status: 200,
+      }).blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
