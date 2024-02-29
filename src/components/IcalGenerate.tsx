@@ -32,16 +32,13 @@ export const IcalGenerate = ({
 
     try {
       //production
-      const res = await fetch(
-        "https://ical-event-generator.vercel.app/api/calendar",
-        {
-          method: "POST",
-          body: JSON.stringify(submitData),
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
+      const res = await fetch("/api/calendar", {
+        method: "POST",
+        body: JSON.stringify(submitData),
+        headers: {
+          "content-type": "application/json",
+        },
+      });
 
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
